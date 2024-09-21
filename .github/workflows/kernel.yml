@@ -1,0 +1,64 @@
+# Kernel compile workflow for personal usage
+# By Rico Ayuba (nickshade88@gmail.com)
+
+name: Kernel CI
+
+on:
+  workflow_dispatch:
+    inputs:
+        branch:
+            description: 'which branch'
+            required: true
+        toolchain:
+            description: 'clang or gcc'
+            required: true
+
+env:
+  TZ: Asia/Jakarta
+  BRANCH: ${{ github.event.inputs.branch }}
+  TOOLCHAIN: ${{ github.event.inputs.toolchain}}
+  token: ${{ secrets.TOKEN }}
+  chat_id: ${{ secrets.CHAT_ID }}
+
+jobs:
+  kernel-build:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+
+    steps:
+      - name: Initializing environment
+        run: |
+          pacman -Syu --needed --noconfirm git zip wget base-devel xmlto bc cpio bzip2 python
+
+      - name: Pull toolchain
+        run: |
+          if [ "${TOOLCHAIN}" = "gcc" ]; then
+            wget https://github.com/mvaisakh/gcc-build/releases/download/19092024/eva-gcc-arm-19092024.xz
+            wget https://github.com/mvaisakh/gcc-build/releases/download/19092024/eva-gcc-arm64-19092024.xz
+            tar -xf eva-gcc-arm64-19092024.xz
+            tar -xf eva-gcc-arm-19092024.xz
+          fi
+
+          if [ "${TOOLCHAIN}" = "clang" ]; then
+            git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 gcc64
+            git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 gcc32
+            mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r530567.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
+          fi
+
+      - name: Pull source
+        run: |
+          git clone --depth=1 https://github.com/Farizmaul/Android_kernel_xiaomi_alioth.git -b $BRANCH kernel
+          git clone --depth=1 https://github.com/Farizmaul/AnyKernel3
+
+      - name: Compiling source
+        run: |
+          cd kernel
+          if [ "${TOOLCHAIN}" = "clang" ]; then
+            wget https://raw.githubusercontent.com/farizmaul/Github-Server/main/alioth_build_script_clang.sh
+            bash alioth_build_script_clang.sh
+          fi
+
+          if [ "${TOOLCHAIN}" = "gcc" ]; then
+            wget https://raw.githubusercontent.com/farizmaul/Github-Server/main/alioth_build_script_gcc.sh
+            bash alioth_build_script_gcc.sh
+          fi
