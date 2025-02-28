@@ -8,7 +8,7 @@ TANGGAL=$(TZ=Asia/Jakarta date "+%Y%m%d-%H%M")
 COMMIT=$(git rev-parse --short HEAD)
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 KERNEL_DEFCONFIG=vendor/alioth_user_defconfig
-FINAL_KERNEL_ZIP=NightQueen-Alioth-$TANGGAL.zip
+FINAL_KERNEL_ZIP=Hyrax-Alioth-$TANGGAL.zip
 
 export ARCH=arm64
 export SUBARCH=arm64
@@ -31,23 +31,26 @@ BUILD_START=$(date +"%s")
 # Post to CI channel
 curl -s -X POST https://api.telegram.org/bot${token}/sendMessage -d text="start building the kernel
 Branch : $(git rev-parse --abbrev-ref HEAD)
-Version : "$KERVER"-NightQueen-$COMMIT
+Version : "$KERVER"-Hyrax-$COMMIT
 Compiler Used : $GCC_VER $LLD_VER" -d chat_id=${chat_id} -d parse_mode=HTML
 
-args="ARCH=arm64 \
-CROSS_COMPILE_ARM32=arm-eabi- \
-CROSS_COMPILE=aarch64-elf- \
-CC=aarch64-elf-gcc \
-LD=aarch64-elf-ld.lld \
-OBJCOPY=llvm-objcopy \
-OBJDUMP=llvm-objdump \
-AR=llvm-ar \
-NM=llvm-nm \
-STRIP=llvm-strip"
+args="	ARCH=arm64 \
+	AR=llvm-ar \
+	NM=llvm-nm \
+ 	CC=aarch64-elf-gcc \
+  	LD=aarch64-elf-ld.lld \
+	CC_COMPAT=arm-eabi-gcc \
+	OBJCOPY=llvm-objcopy \
+	OBJDUMP=llvm-objdump \
+	OBJCOPY=llvm-objcopy \
+	OBJSIZE=llvm-size \
+	STRIP=llvm-strip \
+	CROSS_COMPILE=aarch64-elf- \
+	CROSS_COMPILE_COMPAT=arm-eabi-"
 
 mkdir out
 make -j$(nproc --all) O=out $args $KERNEL_DEFCONFIG
-scripts/config --file out/.config -d CC_WERROR
+# scripts/config --file out/.config -d CC_WERROR
 cd out || exit
 make -j$(nproc --all) O=out $args olddefconfig
 cd ../ || exit

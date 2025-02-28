@@ -33,21 +33,21 @@ jobs:
       - name: Pull toolchain
         run: |
           if [ "${TOOLCHAIN}" = "gcc" ]; then
-            wget https://github.com/mvaisakh/gcc-build/releases/download/19092024/eva-gcc-arm-19092024.xz
-            wget https://github.com/mvaisakh/gcc-build/releases/download/19092024/eva-gcc-arm64-19092024.xz
-            tar -xf eva-gcc-arm64-19092024.xz
-            tar -xf eva-gcc-arm-19092024.xz
+            wget https://github.com/mvaisakh/gcc-build/releases/download/27022025/eva-gcc-arm-27022025.xz
+            wget https://github.com/mvaisakh/gcc-build/releases/download/27022025/eva-gcc-arm64-27022025.xz
+            tar -xf eva-gcc-arm64-27022025.xz
+            tar -xf eva-gcc-arm-27022025.xz
           fi
 
           if [ "${TOOLCHAIN}" = "clang" ]; then
             git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 gcc64
             git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 gcc32
-            mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r530567.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
+            mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
           fi
 
       - name: Pull source
         run: |
-          git clone --depth=1 https://github.com/Farizmaul/Android_kernel_xiaomi_alioth.git -b $BRANCH kernel
+          git clone --depth=1 https://github.com/Farizmaul/android_kernel_xiaomi_alioth -b $BRANCH kernel
           git clone --depth=1 https://github.com/Farizmaul/AnyKernel3
 
       - name: Compiling source
