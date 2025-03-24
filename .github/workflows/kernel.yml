@@ -47,14 +47,14 @@ jobs:
 
       - name: Pull source
         run: |
-          git clone --depth=1 https://github.com/Farizmaul/android_kernel_xiaomi_alioth -b $BRANCH kernel
+          git clone --depth=1 https://github.com/pocof3releases/kernel_xiaomi_sm8250 -b $BRANCH kernel
           git clone --depth=1 https://github.com/Farizmaul/AnyKernel3
 
       - name: Compiling source
         run: |
           cd kernel
           if [ "${TOOLCHAIN}" = "clang" ]; then
-            wget https://raw.githubusercontent.com/farizmaul/Github-Server/main/alioth_build_script_clang.sh
+            wget https://raw.githubusercontent.com/farizmaul/Github-Server/main1/alioth_build_script_clang.sh
             bash alioth_build_script_clang.sh
           fi
 
