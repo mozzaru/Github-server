@@ -47,7 +47,7 @@ jobs:
 
       - name: Pull source
         run: |
-          git clone --depth=1 https://github.com/pocof3releases/kernel_xiaomi_sm8250 -b $BRANCH kernel
+          git clone --depth=1 https://github.com/Farizmaul/alioth_repo -b $BRANCH kernel
           git clone --depth=1 https://github.com/Farizmaul/AnyKernel3
 
       - name: Compiling source
