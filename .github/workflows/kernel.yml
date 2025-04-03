@@ -33,10 +33,10 @@ jobs:
       - name: Pull toolchain
         run: |
           if [ "${TOOLCHAIN}" = "gcc" ]; then
-            wget https://github.com/mvaisakh/gcc-build/releases/download/16032025/eva-gcc-arm-16032025.xz
-            wget https://github.com/mvaisakh/gcc-build/releases/download/16032025/eva-gcc-arm64-16032025.xz
-            tar -xf eva-gcc-arm64-16032025.xz
-            tar -xf eva-gcc-arm-16032025.xz
+            wget https://github.com/mvaisakh/gcc-build/releases/download/03042025/eva-gcc-arm-03042025.xz
+            wget https://github.com/mvaisakh/gcc-build/releases/download/03042025/eva-gcc-arm64-03042025.xz
+            tar -xf eva-gcc-arm64-03042025.xz
+            tar -xf eva-gcc-arm-03042025.xz
           fi
 
           if [ "${TOOLCHAIN}" = "clang" ]; then
@@ -59,6 +59,6 @@ jobs:
           fi
 
           if [ "${TOOLCHAIN}" = "gcc" ]; then
-            wget https://raw.githubusercontent.com/farizmaul/Github-Server/main/alioth_build_script_gcc.sh
+            wget https://raw.githubusercontent.com/farizmaul/Github-Server/main1/alioth_build_script_gcc.sh
             bash alioth_build_script_gcc.sh
           fi
