@@ -7,7 +7,7 @@ ANYKERNEL3_DIR=$MAINPATH/AnyKernel3/
 TANGGAL=$(TZ=Asia/Jakarta date "+%Y%m%d-%H%M")
 COMMIT=$(git rev-parse --short HEAD)
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-KERNEL_DEFCONFIG=vendor/alioth_user_defconfig
+KERNEL_DEFCONFIG="vendor/kona-perf_defconfig vendor/alioth.config"
 FINAL_KERNEL_ZIP=Hyrax-Alioth-$TANGGAL.zip
 
 export ARCH=arm64
@@ -50,7 +50,6 @@ args="	ARCH=arm64 \
 
 mkdir out
 make -j$(nproc --all) O=out $args $KERNEL_DEFCONFIG
-# scripts/config --file out/.config -d CC_WERROR
 cd out || exit
 make -j$(nproc --all) O=out $args olddefconfig
 cd ../ || exit
