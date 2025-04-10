@@ -7,17 +7,17 @@ ANYKERNEL3_DIR=$MAINPATH/AnyKernel3/
 TANGGAL=$(TZ=Asia/Jakarta date "+%Y%m%d-%H%M")
 COMMIT=$(git rev-parse --short HEAD)
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-KERNEL_DEFCONFIG=vendor/alioth_user_defconfig
-FINAL_KERNEL_ZIP=Hyrax-Alioth-$TANGGAL.zip
+KERNEL_DEFCONFIG=markw_defconfig
+FINAL_KERNEL_ZIP=Perf-Markw-$TANGGAL.zip
 
 export ARCH=arm64
 export SUBARCH=arm64
 export KBUILD_BUILD_HOST="archlinux"
-export KBUILD_BUILD_USER="darknight"
+export KBUILD_BUILD_USER="machine"
 export GCC_VER=$("$GCC64"aarch64-elf-gcc --version | head -n 1)
 export LLD_VER=$("$GCC64"aarch64-elf-ld.lld --version | head -n 1)
 export PATH=$GCC64:$GCC32:/usr/bin:$PATH
-export IMGPATH="$ANYKERNEL3_DIR/Image"
+export IMGPATH="$ANYKERNEL3_DIR/Image.gz-dtb"
 export DTBPATH="$ANYKERNEL3_DIR/dtb"
 export DTBOPATH="$ANYKERNEL3_DIR/dtbo.img"
 
@@ -31,7 +31,7 @@ BUILD_START=$(date +"%s")
 # Post to CI channel
 curl -s -X POST https://api.telegram.org/bot${token}/sendMessage -d text="start building the kernel
 Branch : $(git rev-parse --abbrev-ref HEAD)
-Version : "$KERVER"-Hyrax-$COMMIT
+Version : "$KERVER"-Perf-$COMMIT
 Compiler Used : $GCC_VER $LLD_VER" -d chat_id=${chat_id} -d parse_mode=HTML
 
 args="	ARCH=arm64 \
@@ -58,11 +58,11 @@ make -j$(nproc --all) O=out $args V=$VERBOSE 2>&1 | tee error.log
 
 END=$(date +"%s")
 DIFF=$((END - BUILD_START))
-if [ -f $(pwd)/out/arch/arm64/boot/Image ]
+if [ -f $(pwd)/out/arch/arm64/boot/Image.gz-dtb ]
         then
                 curl -s -X POST https://api.telegram.org/bot${token}/sendMessage -d text="Build compiled successfully in $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds" -d chat_id=${chat_id} -d parse_mode=HTML
                 find $DTS -name '*.dtb' -exec cat {} + > $DTBPATH
-                find $DTS -name 'Image' -exec cat {} + > $IMGPATH
+                find $DTS -name 'Image.gz-dtb' -exec cat {} + > $IMGPATH
                 find $DTS -name 'dtbo.img' -exec cat {} + > $DTBOPATH
                 cd $ANYKERNEL3_DIR/
                 zip -r9 $FINAL_KERNEL_ZIP * -x README $FINAL_KERNEL_ZIP

@@ -1,7 +1,9 @@
 # Kernel compile workflow for personal usage
 # By Rico Ayuba (nickshade88@gmail.com)
+#
+# REPO ANDROID_KERNEL_XIAOMI_MARKW_NEW
 
-name: Kernel CI
+name: Kernel CI markw_new
 
 on:
   workflow_dispatch:
@@ -42,23 +44,25 @@ jobs:
           if [ "${TOOLCHAIN}" = "clang" ]; then
             git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 gcc64
             git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 gcc32
-            mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
+            mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r536225.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
+            
+           ## clang 20.0 mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
           fi
 
       - name: Pull source
         run: |
-          git clone --depth=1 https://github.com/Farizmaul/android_kernel_xiaomi_alioth -b $BRANCH kernel
-          git clone --depth=1 https://github.com/Farizmaul/AnyKernel3
+          git clone --depth=1 https://github.com/mozzaru/android_kernel_xiaomi_markw_new -b $BRANCH kernel
+          git clone --depth=1 https://github.com/mozzaru/anykernel -b perf
 
       - name: Compiling source
         run: |
           cd kernel
           if [ "${TOOLCHAIN}" = "clang" ]; then
-            wget https://raw.githubusercontent.com/farizmaul/Github-Server/main/alioth_build_script_clang.sh
-            bash alioth_build_script_clang.sh
+            wget https://raw.githubusercontent.com/mozzaru/Github-Server/main/markw_build_script_clang.sh
+            bash markw_build_script_clang.sh
           fi
 
           if [ "${TOOLCHAIN}" = "gcc" ]; then
-            wget https://raw.githubusercontent.com/farizmaul/Github-Server/main/alioth_build_script_gcc.sh
-            bash alioth_build_script_gcc.sh
+            wget https://raw.githubusercontent.com/mozzaru/Github-Server/main/markw_build_script_gcc.sh
+            bash markw_build_script_gcc.sh
           fi
