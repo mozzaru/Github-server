@@ -18,8 +18,8 @@ export GCC_VER=$("$GCC64"aarch64-elf-gcc --version | head -n 1)
 export LLD_VER=$("$GCC64"aarch64-elf-ld.lld --version | head -n 1)
 export PATH=$GCC64:$GCC32:/usr/bin:$PATH
 export IMGPATH="$ANYKERNEL3_DIR/Image.gz-dtb"
-export DTBPATH="$ANYKERNEL3_DIR/dtb"
-export DTBOPATH="$ANYKERNEL3_DIR/dtbo.img"
+#export DTBPATH="$ANYKERNEL3_DIR/dtb"
+#export DTBOPATH="$ANYKERNEL3_DIR/dtbo.img"
 
 # Check kernel version
 KERVER=$(make kernelversion)
@@ -61,9 +61,9 @@ DIFF=$((END - BUILD_START))
 if [ -f $(pwd)/out/arch/arm64/boot/Image.gz-dtb ]
         then
                 curl -s -X POST https://api.telegram.org/bot${token}/sendMessage -d text="Build compiled successfully in $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds" -d chat_id=${chat_id} -d parse_mode=HTML
-                find $DTS -name '*.dtb' -exec cat {} + > $DTBPATH
+                #find $DTS -name '*.dtb' -exec cat {} + > $DTBPATH
                 find $DTS -name 'Image.gz-dtb' -exec cat {} + > $IMGPATH
-                find $DTS -name 'dtbo.img' -exec cat {} + > $DTBOPATH
+                #find $DTS -name 'dtbo.img' -exec cat {} + > $DTBOPATH
                 cd $ANYKERNEL3_DIR/
                 zip -r9 $FINAL_KERNEL_ZIP * -x README $FINAL_KERNEL_ZIP
                 curl -F chat_id="${chat_id}"  \
